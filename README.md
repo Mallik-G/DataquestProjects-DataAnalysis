@@ -1,2 +1,2 @@
 # Projects
-personal learning projects
+personal learning projects (templates provided by Dataquest.io)
