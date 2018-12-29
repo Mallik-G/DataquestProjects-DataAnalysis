@@ -1,0 +1,37 @@
+# NOTES for the project of PostgreSQL Installation
+Refer to these quick notes for anything related to PostgreSQL - tips
+This is broken down into 4 key parts
+
+## Introduction
+1) Working with SQLite is a nice way for some quick analysis, but for bigger projects that require more memory, power, etc. a good way to solving these scaling up problems is to use the open source PostgreSQL. This will be a quick guide regarding the PostgreSQL database system and the psycopg2 Python library. We can use this for Windows, Mac, and Linux. This will be focused on using a local machine rather than a remote server.
+
+## Installation
+2) During the process, you'll be asked to make a default username and password. Keep in mind this is going to be on your local machine. You may also be asked to specify a port number (Other apps will communicate through the port as if it were on a remote machine). The default port is 5432. For each OS:
+	a) Mac
+		i) https://postgresapp.com/
+		ii) download using the link, move to the applications folder, and launch. The app will run in the background, so you need to connect using Python
+		iii) Add the following line at the end of ~/.bash_profile - export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+		iv) Reset your terminal with: source ~./bash_profile
+	b) Windows
+		i) https://www.openscg.com/bigsql/postgresql/installers.jsp/
+		ii) download using the link, and go through the wizard
+		iii) Remember to decalre 5432 as port number
+	c) Linux
+		i) https://www.postgresql.org/download/linux/
+		ii) download using the link for your specific flavor of linux
+		iii) Remember to decalre 5432 as port number
+
+## Anaconda
+3) To test the installation, open the command line and type psql. You should be in the shell. To login, type psql -USERNAME. This prompts the password, and then successful connection to the desired database if both are correct. Then, you acn install this library using Anaconda: conda install psycopg2
+
+## Launch
+4) Launch the shell, import psycopg2, and then run the following to connect PostgreSQL and test everything:
+	import psycopg2
+	conn = psycopg2.connect(dbname="postgres", user="postgres")
+	conn.autocommit = True
+	cursor = conn.cursor()
+	cursor.execute("CREATE TABLE notes(id integer PRIMARY KEY, body text, title text)")
+	conn.close()
+
+## Conclusion
+If not errors were returned thus far, then the set-up was good and everything is a go! You can now drop the notes table and start fresh.

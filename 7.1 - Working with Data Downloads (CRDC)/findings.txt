@@ -1,0 +1,130 @@
+# Findings Writeup for Command Line Practice of: WORKING WITH DATA DOWNLOADS
+
+## Introduction
+The data set we will work with is called the Civil Rights Data Collection. It contains information on educational achievement and opportunities in the U.S., broken down by race and school. For example, it records the racial composition of the students enrolled in advanced classes at each school. Each row represents a school, while each column records an indicator of academic achievement. We first work with getting the data, downloading it, unzipping, etc. and then looking at the contents file.
+
+## Reading contents
+CRDC2013_14content.csv contains an explanatory file that descries each of the columns in the main file. We read this in read.py and observe any special columns to continue to work with. We first notice that there are a lot of columns! It looks like the header is not the only the column names but the column descriptions. Every row represents a column. We see two interesting ones: "JJ" and "SCH_STATUS_MAGNET".
+    
+## Looking at columns further
+We create pivot tables for these two columns that were picked out, and the results pretty much confirmed what we thought. While obviously there are much less students enrolled in schools that do not involve a youth prison than do, it looks like for those that do, male students are a huge majority of those students enrolled. As for magnet schools, while again there are much less students enrolled in schools that do not involve a magnet school than do, this time there is no distinction in gender, and males and females are pretty evenly distributed regardless of category. 
+
+## Looking at enrollments by gender/race
+total_TR 3.047787508531767                                                      
+total_WH 49.84609172971362                                    
+total_AM 1.4148794016707844                                                     
+total_HI 26.157868932832162                                                     
+total_BL 14.120723301577536                                                     
+total_HP 0.36895686530863364                                                    
+total_AS 5.043692260365496                                                      
+TOT_ENR_M 0.5135960316468473
+TOT_ENR_F 0.4864039683531527  
+
+The numbers represent the % distribution of each category observed in enrollment.py. Comparing with the US race and demography statistics, we see that our data in general compliments the US Census data, with each race and gender being represented how we would expect in terms of school enrollment. One big difference though, is the discrepency between the White and Hispanic population. While Whites represent about 73% of the total population, we see only a ~50% enrllment rate here. The difference almost all goes to the Hispanics, where we see a 16% representation of total population, but over 26% enrollment rate here. There are a number of reasons for this we could explore, including average population age, income, geography of sample data, etc.
+
+## Cleaning up the Data
+Now we clean up our data a bit as there are a lot of files existing in the source folder now. We create a data folder, and put our initial data that was read in that folder. Then our source folder is now separated from the data, so access can be granted to only this folder for example, allowing the user to access the scripts and "alterable" data but not the source data. We also edit our scripts so they can read the data from the new location.
+
+## FURTHER ANALYSIS - we can observe more columns in cnotents and explore more angles
+In order to to our further analysis, we first notice that a lot of these columns have faulty data. There are negative numbers (mostly -9) in a lot of these numeric columns, which should be impossible. We assume these are zero and change it appropriately in the df.
+
+## Reviewing Expulsions
+total_TR 3.468208092485549                                 
+total_AS 2.3121387283236996                                                     
+total_HI 20.809248554913296                                                     
+total_AM 0.0                                                                         
+total_BL 16.184971098265898                                                     
+total_HP 0.0                                                                    
+total_WH 57.225433526011564  
+TOT_DISCWODIS_EXPZT_M 0.7687861271676301 
+TOT_DISCWODIS_EXPZT_F 0.23121387283236994   
+
+There are a lot of columns describing what kind of expulsion and under what criteria, so to avoid redundancy we will explore what seems like a default angle: students without disabilities who received an expulsion under zero tolerance policies. First we see that we must replace some negative values in the df, luckily all the faulty values in this column seem to be -9. Now we see that the distribution of expulsions in terms of race in general match up pretty well with the enrollment.py consensus, with Whites getting expelled just a litle bit more often, but this is probably negligible. The biggest difference is the discrepency between males and females, with males getting expelled at 3x the rate of females. If we wanted to, we could explore each race by gender as well by simply looking at the data columns since the numbers are already there for us. A quick glance shows that the overall distributions are the same, a rate of 3:1.
+        
+## Exploring SAT partiipation differences
+total_HI 0.13805241767736567                                                    
+total_WH 0.5712502800089603              
+total_HP 0.011936381964222855                                                   
+total_TR 0.02124867995775865                                                    
+total_AM 0.012256392204550546                                                   
+total_AS 0.10249927997695926                                                    
+total_BL 0.14275656821018273
+TOT_SATACT_M 0.4663189222055106
+TOT_SATACT_F 0.5336810777944895
+
+Instead of exploring SAT scores, which we have already done in a similar project, we look at SAT partiipation. This dataset also looks at ACT participation, so we will group it in. Again we start by replacing faulty values, which are consisted of -9s. We see the gender distribution about even as expected, but notice a change in race distribution when comparing sat.py to enrollment.py. Hispanic participation takes a huge hit in relation to enrollment density, dropping all the way to below 14%. This difference is seen in the Asian population, in which the density doubles from 5% in enrollments to almost 10% density in participation. Whites also see an increase in density, jumping to 57% of all participation. These changes could again be due to a number of factors including area of the school, opportunity levels, average income, etc. that we could explore further.
+
+## Gender/race differences in magnet schools
+total_AS_magnet 0.07045405842996262
+total_WH_magnet 0.28207814471773135
+total_BL_magnet 0.2559346651110741
+total_HI_magnet 0.36022286244910595
+total_HP_magnet 0.002261958618062335
+total_AM_magnet 0.005262030048334484
+total_TR_magnet 0.023786280625729184
+TOT_ENR_M_magnet 0.511916950403581
+TOT_ENR_F_magnet 0.48808304959641896
+
+total_AS_no_magnet 0.04867856336119268                                          
+total_WH_no_magnet 0.517468564114148
+total_BL_no_magnet 0.13112926570121058                                          
+total_HI_no_magnet 0.2529135188949962
+total_HP_no_magnet 0.003814973772055317             
+total_AM_no_magnet 0.01492943135138753                                          
+total_TR_no_magnet 0.031065682805009664
+TOT_ENR_M_no_magnet 0.5137435266755348
+TOT_ENR_F_no_magnet 0.4862564733244652 
+
+We create two separate distributions to explore both schools that have a magnet school and schools that do not have one in magnet.py. Athough it looks like a lot of data spit out at first, it is actually quite easy to understand quickly. We can see that gender does not play a role in predicting whether a student is involved in a magnet school or not, and this is expected. In fact, we see the main difference is in the races. White representation in magnet schools go way down, and races in general are more evenly distributed. Hispanic distribution in magnet schools jump up to 36% as opposed to 25% in non-magnet schools, Black distribution in magnet schools jump up to over 25% as opposed to 13%, and Asians see their distribution almost double in magnet schools to 7%. Overall, it seems like the non-White races "benefit" from being involved in a magnet school, while Whites see a big decline in distribution. We must keep in mind though, that magnet schools in general are not very common in this dataset, representing just a small number of total schools.
+
+## Students in gifted programs
+total_BL 0.10901455608205884                                                    
+total_HP 0.003518429191612519                                   
+total_TR 0.033254830746531225                                                   
+total_WH 0.5580115200181597                                                     
+total_AM 0.0157761825043271                                                     
+total_HI 0.18738472888233124                                                    
+total_AS 0.09303975257497943                                                    
+TOT_GTENR_M 0.49754561189456065 
+TOT_GTENR_F 0.5024543881054394 
+
+An interesting angle is to look at students who are considered to be enrolled in "gifted" or "talented" programs. We first have to take these words with a grain of salt, because they are subjectively decided by the schools. Taking their criteria into account though, and once we again replace th fauly values (-9s again), we see the data distribution in gifted.py. We again see that gender is about 50/50, as expected. We see the race distribution as generally the same as enrollmeny.py, except for a couple little differences. While the Black and Hispanic populations seem to be under represented in gifted programs, the differences seem to be going to the Asian population, benefitting from a 5% distribution in enrollments to a 9% distribution in gifted enrollment. A good point to make at this point in the analysis is that races such as American Indian (AM), "Two or More" (TR), Native Hawaiian/Pacific Islander (HP), etc. have changes well over 100% sometimes in their distributions from one category to another, but because the overall distribution is so small, it is hard to tell whether or not this change is just due to variance or actually significant without further in-depth analysis.
+
+## Changes in from pre-school to high school
+total_BL 0.13636000319718647                                                    
+total_AM 0.024298617216849172                                                   
+total_WH 0.4441691311645752                                                     
+total_AS 0.03412996563024538                                                    
+total_HI 0.3229158340660219                   
+total_HP 0.002717608504516026                                                   
+total_TR 0.035408840220605864
+TOT_PSENR_M 0.5330509151946288 
+TOT_PSENR_F 0.4669490848053713
+
+A good time-field analysis we can look at is how distributions change as we go from preschool to high school. Accounting for faulty values (-9s) again, we come up with the distribution above to compare to enrollment.py. We see that gender differenes are most likely due to just variance and should not be declared significant. The biggest difference here seems to be that Hispanics see a lot of enrollment in preschool, and this decreases as we progress towards high school, while the opposite is true for Whites. Like before, this can be due to a number of differences such as family income, areas of schooling, even cultural differences and beliefs.
+
+## Investigating Bullying across genders/races
+total_AS_bullied 0.047493403693931395 
+total_AM_bullied 0.0316622691292876 
+total_HI_bullied 0.18733509234828497
+total_HP_bullied 0.0                                                            
+total_BL_bullied 0.32981530343007914                                            
+total_TR_bullied 0.04221635883905013
+total_WH_bullied 0.36147757255936674
+TOT_HBREPORTED_RAC_M 0.6174142480211082                                         
+TOT_HBREPORTED_RAC_F 0.38258575197889183
+
+total_AS_bully 0.01904761904761905                                              
+total_AM_bully 0.014285714285714285                                             
+total_HI_bully 0.2119047619047619                                               
+total_HP_bully 0.0      
+total_BL_bully 0.1976190476190476                 
+total_TR_bully 0.02857142857142857                                              
+total_WH_bully 0.5285714285714286
+TOT_HBDISCIPLINED_RAC_M 0.7761904761904762
+TOT_HBDISCIPLINED_RAC_F 0.22380952380952382 
+
+To explore bullying, we create two separate categories for bully.py just like magnet.py. There are plenty of bullying categories that the dataset has separated the data into, so to avoid redundancy, we choose only bullying based on race, color, or national origin. Other categories of bullying such as based on sex can be explored almost identically in this process. Here we see that, interestingly, males do most of the bullying, and are the most bullied. This probably means that a majority of the time they just bully each other. Within the races themselves, we see that Whites are more likely to bully than be bullied, with the bully distribution more representing their population disribution than bullied. Also, as expected, since we are looking at the category of bullying by race, color, or national origin, all other races besides Hispanics are more likely to be bullied than be bullies, in some cases even twice as likely. Hispanics are more likely to be bullies than be bullied, albeit by a small percentage. This is an interesting finding, as we would expect it to be the opposite. It might be worth looking more into from different angles.
+
+## Conclusion
+While there are many more columns to explore from (literally thousands), we get the gist of command-line data analysis using python from what we have done so far. We explored some different distributions in school data and found some interesting data points that could be worth being their own individual projects in the future. All other columns can probably be explored similarly to what the existing scripts look like. This information can be useful for a number of fields, from Psychology to Education!

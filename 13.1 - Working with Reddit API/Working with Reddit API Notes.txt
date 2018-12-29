@@ -1,0 +1,63 @@
+# NOTES for the project of Working with Reddit API
+Refer to these quick notes for anything related to APIs - a quick analysis using Reddit - a lot of code will be recorded here
+This is broken down into 7 key parts
+
+## Introduction 
+1) This will tie together making API requests, authenticating with an API server, and parsing responses to explore trending posts and comments on Reddit. In particular:
+    a) Retrieving a list of trending posts on a particular subreddit
+    b) Exploring the comments on a single article
+    c) Posting our own comment on an article
+
+## Authenticating
+2) Let's get started! To authenticate, we'll use OAuth (not in detail) instead of a token. It is a bit more complex, but managable. The string "bearer" will be used instead of "token" in the headers, as well as a "User-Agent" string to identify as a user to the API (Dataquest for this example). After importing requests on Python, the code will more or less look like this:
+
+	headers = {"Authorization": "bearer 13426216-4U1ckno9J5AiK72VRbpEeBaMSKk", "User-Agent": "Dataquest/1.0"}
+	params = {"t": "day"}
+	response = requests.get("https://oauth.reddit.com/r/python/top", headers=headers, params=params)
+	python_top = response.json()
+
+## Most Upvoted Post
+3) Here, python_top is a dictionar containing info on all posts that users submitted during the past day. The information we are looking for, upvotes, in this case, is buried in this dictionary in the list containing all of the posts. To extract it, we need to access the fields such as id and ups (upvotes) after accessing the "children" key:
+
+	python_top_articles = python_top["data"]["children"]
+	most_upvoted = ""
+	most_upvotes = 0
+	for article in python_top_articles:
+    	    art = article["data"]
+    	    if art["ups"] >= most_upvotes:
+        	most_upvotes = art["ups"]
+        	most_upvoted = art["id"]
+
+## Getting Post Comments
+4) Now we have an ID for the most upvoted post (id itself not important, can change) and can retrieve comments from it. To do this, the code will look like this:
+
+	url = "https://oauth.reddit.com/r/python/comments/"
+	url += most_upvoted
+	response = requests.get(url, headers=headers)
+	comments = response.json()
+
+## Most Upvoted Comment
+5) As you can see, we can keep diving deeper and deeper into the Reddit API and this correlates to any/most APIs! Querying the comments returns a list in the last step, with the first item containing post info and the second item containing info about the comments. Keep in mind that nested comments exist on Reddit. Getting the "replies" key gets these nested comments as well as the original comment with the "data" key. For simplicity, the nested replies are ignored here (and in most cases, replies will not have more upvotes than the original comment anyways), and the code for getting the most upvoted comment is actually quite similar:
+
+	comments_list = comments[1]["data"]["children"]
+	most_upvoted_comment = ""
+	most_upvotes_comment = 0
+	for comment in comments_list:
+    	    com = comment["data"]
+    	    if com["ups"] >= most_upvotes_comment:
+        	most_upvotes_comment = com["ups"]
+        	most_upvoted_comment = com["id"]
+
+## Upvoting Something Ourselves
+6) We can upvote a comment with the /api/vote endpoint! The following parameters will need to be passed, though:
+    a) dir - vote direction (1,0,-1 options)
+    b) id - id for the post/comment to upvote
+
+The code for the upvote will be via a post request, and will look something like this (make sure status is 201):
+
+	payload = {"dir": 1, "id": most_upvoted_comment}
+	response = requests.post("https://oauth.reddit.com/api/vote", json=payload, headers=headers)
+	status = response.status_code
+
+## Conclusion
+7) Success! We did everything from authenticating with an API, retrieve and parsed responses from the API, and even did a little work ourselves with an upvote to end everything. Things like this will get much easier in the future with the use of Web scraping, which we will probably be using a majority of the time from now on.

@@ -1,0 +1,256 @@
+# read the data in 
+
+import pandas as pd
+
+def load_data():
+    df = pd.read_csv("hn_stories.csv", sep = ',', names = ["submission_time", "upvotes", "url", "headline"])
+    return df
+
+------------------------------------
+
+# count which words appear most often in headlines
+
+import read
+from collections import Counter
+
+hn = read.load_data()
+hn_headline = hn["headline"]
+
+string = ""
+for s in hn_headline:
+    string += str(s) + ' '
+    
+print(Counter(string.lower().split()).most_common(100))
+
+------------------------------------------
+
+# explore which domains were sumitted most often 
+## edit: added code to account for subdomains
+
+import read
+import pandas as pd
+
+def remove_subdomain(url):
+    if pd.isnull(url):
+        return url
+    url = str(url)
+    if url.count('.') > 1:
+        index = url.find('.')
+        sub_url = url[index+1:]
+        return sub_url
+    else:
+        return url
+
+hn = read.load_data()
+domains = hn["url"].apply(func = remove_subdomain).value_counts()
+domains = domains[:99:]
+for name, row in domains.items():
+    print("{0}: {1}".format(name,row))
+    
+-------------------------------------------------------------
+
+# Find when the most articles are submitted
+## edit: added code to account for different time measurements
+
+import read
+import pandas as pd
+import dateutil as dt
+#import datetime
+
+def years(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.year
+
+def months(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.month
+
+def days(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.day
+
+def hours(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.hour
+
+def minutes(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.minute
+
+hn = read.load_data()
+
+hn["year"] = hn["submission_time"].apply(func = years)
+print(hn["year"].value_counts())
+
+hn["month"] = hn["submission_time"].apply(func = months)
+print(hn["month"].value_counts())
+
+hn["day"] = hn["submission_time"].apply(func = days)
+print(hn["day"].value_counts())
+
+hn["hour"] = hn["submission_time"].apply(func = hours)
+print(hn["hour"].value_counts())
+
+hn["minute"] = hn["submission_time"].apply(func = minutes)
+print(hn["minute"].value_counts())
+
+---------------------------------------------------------
+
+# correlate headline lengths to upvotes
+
+import read
+import pandas as pd
+
+def count_headlines(headline):
+    if pd.isnull(headline):
+        return 0
+    else:
+        headline = str(headline)
+        length = len(headline)
+        return length
+
+hn = read.load_data()
+
+hn["headline"] = hn["headline"].apply(func = count_headlines)
+headline_lengths = hn["headline"].unique()
+
+upvotes = {}
+
+for l in headline_lengths:
+    counter = 0
+    upvotes[l] = 0
+    for row in range(len(hn)):
+        if hn.iloc[row][3] == l:
+            upvotes[l] += hn.iloc[row][1]
+            counter+= 1
+    upvotes[l] = upvotes[l] / counter        
+    
+sorted_upvotes = sorted(upvotes.items(), key = lambda value: value[1])
+print(sorted_upvotes)   
+
+---------------------------------------------------------------------------------
+
+# correlate submission time to upvotes
+
+import read
+import pandas as pd
+import dateutil as dt
+
+def months(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.month
+
+def hours(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.hour
+
+hn = read.load_data()
+
+hn["month"] = hn["submission_time"].apply(func = months)
+months = hn["month"].unique()
+
+hn["hour"] = hn["submission_time"].apply(func = hours)
+hours = hn["hour"].unique()
+
+month_upvotes = {}
+hour_upvotes = {}
+
+for month in months:
+    counter = 0
+    month_upvotes[month] = 0
+    for row in range(len(hn)):
+        if hn.iloc[row]["month"] == month:
+            month_upvotes[month] += hn.iloc[row][1]
+            counter+= 1
+    month_upvotes[month] = month_upvotes[month] / counter   
+            
+for hour in hours:
+    counter = 0
+    hour_upvotes[hour] = 0
+    for row in range(len(hn)):
+        if hn.iloc[row]["hour"] == hour:
+            hour_upvotes[hour] += hn.iloc[row][1]
+            counter+= 1
+    hour_upvotes[hour] = hour_upvotes[hour] / counter   
+            
+sorted_month_upvotes = sorted(month_upvotes.items(), key = lambda value: value[1])
+sorted_hour_upvotes = sorted(hour_upvotes.items(), key = lambda value: value[1])
+
+print("MONTH_UPVOTES\n")
+print(sorted_month_upvotes)
+print("\nHOUR_UPVOTES\n")
+print(sorted_hour_upvotes)
+
+-----------------------------------------------------------------------------------------
+
+# correlate total upvotes to time
+
+import read
+import pandas as pd
+import dateutil as dt
+import matplotlib.pyplot as plt
+
+def years(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.year
+
+def months(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.month
+
+def hours(timestamp):
+    time = dt.parser.parse(timestamp)
+    return time.hour
+
+hn = read.load_data()
+
+hn["year"] = hn["submission_time"].apply(func = years)
+years = [2007,2008,2009,2010,2011,2012,2013,2014,2015]
+
+hn["month"] = hn["submission_time"].apply(func = months)
+months = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+hn["hour"] = hn["submission_time"].apply(func = hours)
+hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,1,20,21,22,23]
+
+year_upvotes = {}
+month_upvotes = {}
+hour_upvotes = {}
+
+for year in years:
+    year_upvotes[year] = 0
+    for row in range(len(hn)):
+        if hn.iloc[row]["year"] == year:
+            year_upvotes[year] += hn.iloc[row][1]
+
+for month in months:
+    month_upvotes[month] = 0
+    for row in range(len(hn)):
+        if hn.iloc[row]["month"] == month:
+            month_upvotes[month] += hn.iloc[row][1]
+            
+for hour in hours:
+    hour_upvotes[hour] = 0
+    for row in range(len(hn)):
+        if hn.iloc[row]["hour"] == hour:
+            hour_upvotes[hour] += hn.iloc[row][1]
+
+print("YEAR_UPVOTES\n")
+print(year_upvotes)
+a,b = (list(year_upvotes.keys()), list(year_upvotes.values()))
+plt.plot(a,b)
+plt.show()
+
+print("\nMONTH_UPVOTES\n")
+print(month_upvotes)
+c,d = (list(month_upvotes.keys()), list(month_upvotes.values()))
+plt.plot(c,d)
+plt.show()
+
+print("\nHOUR_UPVOTES\n")
+print(hour_upvotes)
+e,f = (list(hour_upvotes.keys()), list(hour_upvotes.values()))
+plt.plot(e,f)
+plt.show()
+
+------------------------------------------------------------------------------------------

@@ -1,0 +1,17 @@
+.txt file containing notes for project of: INSTALLING CYGWIN (windows familiarity)\
+
+https://cygwin.com/install.html
+
+Breakdown of 6 major steps
+
+1) Context - Cygwin is basically a UNIX command-line interface for Windows. Once installed, familiar commands like stat, pwd, cd, etc can be accessed.
+
+2) Install - Cygwin itself is quite simple to install once you know what you’re doing. Simply select 32 or 64 bit version - and then installing from the internet will get you the latest version (recommended)
+
+3) Setup - default root directory will be in a cygwin folder in C:, this is fine. Selecting all users to install to is also fine. The default local package directory created in users/user/downloads is good if you choose to default all your downloads somewhere, otherwise locate it to wherever that may be. Lastly, generally it is a good idea to use system proxy settings to use the default system proxy that your computer uses.
+
+4) Mirrors - from the gigantic list of download packages - “http://mirrors.kernel.org” is recommended. The packages will be reliable and up to date here, though you are free to use any other ones. Cygwin developers also have a list of up-to-date sites available. https://cygwin.com/mirrors.html. Next, on the screen to install packages, this can be left blank for now, since we are only installing the shell. We can come back and install specific packages as needed.
+
+5) Completion - After completion, there will be an interface with the capability of everything else that can be run on the interfaces of UNIX on mac OS, etc. There is access to all Bash commands, and a terminal just like any other. This is to get practice with interfaces for Windows since it is a lesser known “version” of working command lines. Documentation can be found here. https://cygwin.com/docs.html
+
+6) Conclusion - currently, “ls” should display nothing as the root directory is C:\cygwin. Making the root desktop, etc. will come with more things listed at first and may be easier for practice. To change working directory, go to Edit Environment Variables For Your Account, and add an environment variable for your personal account by: clicking add, entering the variable name HOME, value of the working directory you want (in this case C:\Users\user\Desktop), and then OK. Now Cygwin should open up to your specified HOME environment variable. “pwd” and “ls” should verify this. Good luck!

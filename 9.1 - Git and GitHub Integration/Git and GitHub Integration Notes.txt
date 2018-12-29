@@ -1,0 +1,34 @@
+# NOTES for the project of Git Installation and GitHub Integration
+Refer to these quick notes for anything related to GitHub integration - tips for analysis
+This is broken down into 5 key parts
+
+## Introduction 
+1) Git and GitHub is a powerful tool worth having and knowing about. Here we go through the process of setting it up locally and authenticating it. This can help with many data science projects being performed much more easily.
+
+## Installation
+2) Fortunately, installing Git only takes a few steps:
+    a) https://git-scm.com/downloads - download the appropriate installer for your OS
+    b) Run the installer and installation wizard like normal
+    c) Open Terminal (or Command Prompt) and type: git version
+If the output looks normal (no error), congrats!
+
+## Configuration
+3) Now we configure and personalize with your name and email. Run this: git config --global user.name "YOUR NAME HERE". Then run: git config --global user.email "YOUR EMAIL HERE"
+
+## GitHub
+4) There is no "installation" for GitHub obviously, but we still do need an account. Simply make one here https://github.com/. Then do these three things:
+    a) Make sure your username and email are unique (and password is good obviously)
+    b) Choose free plan (all your code and repositories will be public). Upgrade paid plans are an option for private repositories, but for now free will do
+    c) You can follow https://guides.github.com/activities/hello-world/ if you want for GitHub basics
+Completing the last part will guide you to create your first repository on GitHub!
+
+## Authentication
+5) Now you need to authenticate your machine with GitHub so you can push code to remote repositories (repos). An easy way to do this is to clone the repo on GitHub to your loca. Simply click the "Clone or Download" button on the repo page, and then click "Use HTTPS" in the window to show the clone URL. Use this with the command line and run: git clone {url here}. Enter your username and password, login, and Git will auto download your pro to your local as a new folder. To verify, you can do the following:
+    a) Create a branch (git checkout -b test)
+    b) Make a change (nano to edit from command)
+    c) Commit the change (git commit -am 'test')
+    d) Push the branch to GitHub (git push origin test)
+By default, you'll be asked to login every time you run push, pull, or any other Git command to the remote repo. You can use a credential helper to get around this. Use these to get started: (it's simple!) https://help.github.com/articles/which-remote-url-should-i-use/#cloning-with-https-urls-recommended and https://help.github.com/articles/caching-your-github-password-in-git/
+
+## Conclusion 
+Now you have a place to store all of these different projects you've been working on (I hope). Go nuts!

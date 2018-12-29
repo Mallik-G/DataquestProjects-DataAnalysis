@@ -1,0 +1,13 @@
+.txt file containing notes for project of: INSTALLING WINDOWS SUBSYSTEM FOR LINUX (windows familiarity)\
+
+https://support.microsoft.com/en-us/help/4027667/windows-10-update
+
+Breakdown of 4 major steps:
+
+1) Introduction - Here we are basically implementing a command-line interface for Microsoft Windows - UNIX. This is accomplished by installing Windows Subsystem for Linux (WSL). First, get the appropriate version of Windows 10. This can be looked up per the link as well as windows settings. You will also unfortunately need 64-bit architecture to work with WSL.
+
+2) Getting Started - search “turn windows” in your search bar in windows and select “Turn Windows Features On or Off”. This is so you can have the WSL Optional Component enabled. Enable it in the Windows Subsystem for Linux if it is unchecked, else we can move on.
+
+3) Installation - Go to Microsoft Store, and simply search Linux. The option should be “Run Linux on Windows”. Then, select any Linux distribution. The pros and cons of each can be found here. https://en.wikipedia.org/wiki/Comparison_of_Linux_distributions. Recemmendation is to install Ubuntu. This will be the default for the rest of the notes. Click “Get”, wait for the download and launch it! You will then be prompted for an account name and password, which can be anything.
+
+4) Working Within and Conclusion - You will now see the command-line and can use all familiar commands thus far. “ls” will return nothing - but running “pwd” will explain why.  To change your working directory, either A) create a symbolic link or B) edit your .bashrc. Option B: .bashrc contains all of the setting and aliases that the shell pays attention to when you start it. To edit this, type edit ~/.bashrc. When this opens, scroll to the bottom and press i for insertion mode. Exactly like it sounds, you can insert changes to bashrc. Remember to add comments! Add a cd command after the comment to change the directory to whatever you want when starting the shell. Lastly, press Esc to exit insertion mode. To return to BASH, type :wq to save changes and exit. You can type cat ~/.bashrc to verify changes, and then source ~/.bashrc to have the changes take effect immediately. Good luck!

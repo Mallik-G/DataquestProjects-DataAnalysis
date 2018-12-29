@@ -1,0 +1,35 @@
+--------------------------------------------------------------------------------------------------
+
+# Transforming Data with Python (Command Line)
+
+## Introduction
+The dataset we will be working with is a set of submisions to "Hacker News" from 2006 to 2015. This site is like a 'reddit' type of site where users can submit articles related to technology, startups, etc. that can be upvoted to a front page, commented on, and the works. The dataset in full has a lot of data that will not be used for this project, so we start by first sampling more than enough rows and then using 4 main columns: submission time, upvotes, url, and headline. We will answer questions like which words appear most often in headlines, which domains were submittedmost often, and what times are submissions most popular. All of this will be done from the command line for practice.
+    
+## Loading Data
+We can create a function in read.py that can be called to load the data in quickly when we use other python scripts with just a simple call. We do this here in load_data().
+
+## Count Words in Headlines
+Now we try to answer which words appear the most in headlines. In count.py, we make sure to import read.py, then import Counter as well, for the counting feature. The results for the top 100 frequencies show that the Big 5 companies own a lot of real estate in headlines (Facebook, Apple, etc.), appearing the most after we account for garbage words (the, a, to, of, for, etc.). 
+
+## Count Domains Submitted Most 
+In domains.py, we look at which domains were submitted most. We alter the code such that subdomains are accounted for as well in the function remove_subdomains(), as this could provide better results. The top domains seem be the likes of github, blogspot, wordpress, etc. and the trend here seems to be open source, free information, which makes sense, because that is what you would expect from a site like Hacker News.
+
+## Find Popular Submission Times 
+In times.py, we now look at most popular submission times. we simply create a small function for several time measurements, and call each one with the help of dateutil. Using this, the most popular year seems to be 2012, March by month, the 19th of the month by day, around 5pm UTC by hour, and even around the 35th minute of every hour by minute. Athough at the hour or minute level this data seems to fall into the irrelevant range, it is interesting to see that the site peaked in 2012, and March benig the most popular month to post could also mean something. 5pm makes sense as well, although anyone from anywhere in the world could post at anytime, so this could be nothing.
+
+## FURTHER ANALYSIS
+
+## Which Headline Length is Optimal?
+This is more of a fun analysis than anything, as obviously as long as your headline is not crazy long or just one letter, upvotes should not matter. The code that we have written in lengths.py is noted to take a while to run and could be optimized a bit more. However, in our results we do find that headlines with 85, 0, 1, 2, 87, etc. characters only receive one upvote on average (or 0 because we are using int), and headlines with 67 characters receive ~19.5 upvotes on average. It goes without saying that there is no real trend or correlation between headline length and upvotes, and it is clearly seen even at a glance in the data. However, we do see that very small headline lengths (1-5) and the higher ones of 85, 87, etc. mentioned before receive lesser upvotes, which is what we expected again.
+
+## What Submission Time is Optimal?
+We could iterate this over any time measurement like in times.py, but to avoid redundancy we will focus on month and hour for good measure. The code can be easily edited to find other measures. The code in submissions.py is similar to lengths.py in that it could be optimized a little bit. In our results, we see that from the sample, the worst time to submit would be July, receiving around 6.3 upvotes on average, while the best time to submit would be March, receiving almost double that in around 10.7 upvotes on average. The later months are actually clustered towards the low end of upvotes while the early months (including December-March) are all the highest ranked, so there may be some evidence to the fact that it is not random that submitting during these times will get you more upvotes. In terms of hours, while we saw that 5pm was the most popular time for submissions, around 9pm UTC is actually when you would get the most upvotes; around 13.4 on average. The lowest upvotes occur at a rate of around 5.2 per post at 8am. Like the months, similar times are clustered are are believed to be not random. Posting during the early morning will get you less upvotes, while later at night into the evening will get you more upvotes. This makes sense, as people will be busy going to work in the morning and the such, and will have more free time towards the evening. 
+
+## Total Upvotes Changing Over Time 
+* uses plots (more efficient to see the data this way)
+Finally, we try to look at how total number of upvotes change over time. We have included plots in the code in upvotes.py, but obviously they are hard to view from the command line. Also, year has been added from the two other measures of hour and month, as this could be interesting to observe. Per our results, we see that by year, upvotes increased steadily over time to around ~17.5k total in 2012, and then maintained that number up until the present. We assume 2015 was not completed yet at the time this data was collected so the numbers are low. This is good news, as earlier we found that 2012 may have been the most popular time to submit articles, but the upvotes at least have maintained pace to the present. If we look month by month, there is still a noticeable drop in upvotes in the later, summer months and a rise in upvotes in the earlier, winter months. This supports what we found earlier in submissions.py. In terms of hours (even though by now we are really down the rabbit hole), our findings were supported again in that total upvotes steadily increase as the morning ends, and then start to decrease again in the late late evening into the AM hours, as expected.
+
+## Conclusion
+Thus we conclude our analysis on the Hacker News Stories csv that we transformed using the command line. Other and next steps could involve things like looking combining the upvotes over time to form a linear, month by month, year by year chart to be integrated into iPython or the likes. This can be accomplished by a simple nested loop using our initial code. Looking at certain topics over time could be very interesting too. For example, a key buzzword "bitcoin" could be passed in a function to search in headlines, and returns submission times as to when these matched up. This could also be accomplished fairly simply using our templates. Overall though, a basic outline of how we could use the command line to our advantage in examining the csv was shown.
+
+---------------------------------------------------------------------------------------------
